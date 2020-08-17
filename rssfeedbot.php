@@ -83,9 +83,12 @@ while($running){
           //If something is not set.
           if(!is_object($item)){             echo "\n###### Item Not An Object\n";U::print_cli($item);continue;}
           if(!isset($item->link)) {          echo "\n###### Item link not setted\n"; U::print_cli($item); continue;}
-          if(!is_string($item->description)){echo "\n###### Description not a string.\n"; U::print_cli($item); continue;}
+          //if(!is_string($item->description)){echo "\n###### Description not a string.\n"; U::print_cli($item); continue;}
           
           $description = format_description($item->description);
+          if($description == ""){
+            $description = format_description($item->body);
+          }
           $link = is_meneame_link($item->link, $description);
           $ivlink = checkIvLink($link);
           
