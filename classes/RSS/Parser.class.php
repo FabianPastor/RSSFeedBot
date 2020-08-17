@@ -3,7 +3,6 @@ namespace FabianPastor\RSS;
 
 require_once(__DIR__."/../DOM/Document.class.php");
 
-use FabianPastor\DOM\Document;
 class Parser{
   
   public static function normalize_xml($xml){
