@@ -8,12 +8,14 @@ class Parser{
   public static function normalize_xml($xml){
     $xml = str_replace([
       "<content:","</content:",
+      "<media:","</media:",
       "<atom:", "</atom:",
       "<dc:", "</dc:",
       "<sy:", "</sy:",
     ],
     [
       "<content-","</content-",
+      "<media-","</media-",
       "<atom-", "</atom-",
       "<", "</",
       "<", "</",
@@ -33,14 +35,13 @@ class Parser{
     $obj->items = [];
     foreach( $doc->get("//item") as $itemNode ){
       $item = new \stdClass;
-      $item->guid         = $doc->eval("string(./child::guid)", $itemNode);
-      $item->title        = $doc->eval("string(./child::title)", $itemNode);
-      $item->link         = $doc->eval("string(./child::link)", $itemNode);
-      $item->description  = trim($doc->eval("string(./child::description)", $itemNode));
-      if($item->description == ""){
-        $item->description  = trim($doc->eval("string(./child::content-encoded)", $itemNode));
-      }
-      $item->tags         = array_map("trim" , $doc->getValues("./child::category", $itemNode));
+      $item->guid         = trim( $doc->eval("string(./child::guid)", $itemNode) );
+      $item->title        = trim( $doc->eval("string(./child::title)", $itemNode) );
+      $item->link         = trim( $doc->eval("string(./child::link)", $itemNode) );
+      $item->description  = trim( $doc->eval("string(./child::description)", $itemNode) );
+      $item->description  .= trim( $doc->eval("string(./child::media-description)", $itemNode) );
+      $item->body         = trim( $doc->eval("string(./child::content-encoded)", $itemNode) );
+      $item->tags         = array_map("trim" , $doc->getValues("./child::category", $itemNode) );
       $item->pubDate      = strtotime($doc->eval("string(./child::pubDate)", $itemNode));
       $obj->items[] = $item;
     }
